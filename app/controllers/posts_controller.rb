@@ -1,10 +1,10 @@
 class PostsController < ApplicationController
   before_action :set_post, only: [:show, :edit, :update, :destroy]
-
+  before_filter :authenticate_user!
   # GET /posts
   # GET /posts.json
   def index
-    @posts = current_user.posts.all
+    @posts = current_user.posts.order("post_name").page(params[:page]).per(5)
   end
 
   # GET /posts/1

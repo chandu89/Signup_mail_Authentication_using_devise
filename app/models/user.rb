@@ -8,6 +8,9 @@ class User < ActiveRecord::Base
 	validate :username_in_one_word
 	validates :username, :format => { with: /\A[a-zA-Z0-9]*\z/ , :message => 'no special characters, only letters and numbers' }
 	has_many :posts
+	before_create do |doc|
+	  doc.api_key = doc.generate_api_key
+	end
 
   attr_accessor :login
   def self.find_for_database_authentication warden_conditions
@@ -58,7 +61,12 @@ class User < ActiveRecord::Base
 	  where(["username = :value OR email = :value", {value: login}]).first
 	end
 
-
+	def generate_api_key
+	  loop do
+	    token = SecureRandom.base64.tr('+/=', 'Qrt')
+	    break token unless User.exists?(api_key: token)
+	  end
+	end
 
 	private
 
@@ -67,4 +75,6 @@ class User < ActiveRecord::Base
 	    errors.add(:username, 'must be one word')
 	  end
 	end
+
+	
 end

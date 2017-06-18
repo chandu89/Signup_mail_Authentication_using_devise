@@ -5,3 +5,8 @@ en:
     attributes:
       user:  
         login: "Username or email"
+  views:
+    pagination:
+      previous: "&lt; Previous"
+      next: "Next &gt;"
+      truncate: "..."
