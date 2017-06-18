@@ -3,6 +3,11 @@ class User < ActiveRecord::Base
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable, :confirmable
+	
+	validates :username, uniqueness: true
+	validate :username_in_one_word
+	validates :username, :format => { with: /\A[a-zA-Z0-9]*\z/ , :message => 'no special characters, only letters and numbers' }
+	has_many :posts
 
   attr_accessor :login
   def self.find_for_database_authentication warden_conditions
@@ -51,5 +56,15 @@ class User < ActiveRecord::Base
 
 	def self.find_record login
 	  where(["username = :value OR email = :value", {value: login}]).first
+	end
+
+
+
+	private
+
+	def username_in_one_word
+	  if username.to_s.squish.split.size != 1
+	    errors.add(:username, 'must be one word')
+	  end
 	end
 end
