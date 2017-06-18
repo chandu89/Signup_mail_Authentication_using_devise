@@ -7,12 +7,12 @@ default: &default
   password: postgres
 development:
   <<: *default
-  database: Suventure_development
+  database: Suv_development
 test:
   <<: *default
-  database: Suventure_test
+  database: Suv_test
 
 production:
   <<: *default
-  database: Suventure_production
+  database: Suv_production
   
